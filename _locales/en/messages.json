@@ -1,0 +1,25 @@
+{
+  "extName": { "message": "Evigrade Skin – cosmetic ingredient checker" },
+  "extDescription": {
+    "message": "Evidence-based traffic light for every cosmetic ingredient. Personal stop-list, allergen alerts, product comparison. 18 stores."
+  },
+  "popupTitle": { "message": "Evigrade Skin" },
+  "popupSubtitle": { "message": "Cosmetic ingredient checker" },
+  "scanning": { "message": "Scanning page..." },
+  "noIngredients": { "message": "Could not find ingredients on this page" },
+  "pasteManually": { "message": "Paste ingredients manually" },
+  "analyze": { "message": "Check" },
+  "pastePlaceholder": { "message": "Paste comma-separated ingredient list..." },
+  "green": { "message": "Works" },
+  "yellow": { "message": "Uncertain" },
+  "red": { "message": "Doesn't work" },
+  "unknown": { "message": "Not in database" },
+  "moreOnSite": { "message": "More on site" },
+  "foundCount": {
+    "message": "Found $COUNT$ of $TOTAL$",
+    "placeholders": { "count": { "content": "$1" }, "total": { "content": "$2" } }
+  },
+  "irritation": { "message": "Irritation" },
+  "openCard": { "message": "Card" },
+  "error": { "message": "Server connection error" }
+}

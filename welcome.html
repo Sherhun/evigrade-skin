@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; form-action 'none'; base-uri 'none';">
+<meta name="referrer" content="no-referrer">
+<title data-i18n="welcomeDocTitle">Evigrade</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #fafafa;
+    color: #1a1a2e;
+    min-height: 100vh;
+    padding: 40px 20px;
+  }
+  .container { max-width: 720px; margin: 0 auto; }
+  .logo { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 32px; }
+  .logo-icon {
+    width: 40px; height: 40px;
+    background: #2db5a3;
+    color: #fff;
+    font-family: Georgia, serif;
+    font-weight: 900;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+  }
+  .logo-text { font-family: Georgia, serif; font-weight: 900; font-size: 24px; color: #1a1a2e; }
+  h1 {
+    font-family: Georgia, serif;
+    font-size: 48px;
+    font-weight: 800;
+    line-height: 1.1;
+    color: #1a1a2e;
+    margin-bottom: 16px;
+  }
+  .lead { font-size: 18px; color: #666; margin-bottom: 40px; line-height: 1.5; }
+  .steps {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 40px;
+  }
+  .step { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid #f0f0f0; }
+  .step:last-child { border-bottom: none; }
+  .step-num {
+    width: 32px; height: 32px;
+    background: #2db5a3;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    flex-shrink: 0;
+    font-family: Georgia, serif;
+  }
+  .step-text { flex: 1; padding-top: 4px; }
+  .step-title { font-weight: 600; font-size: 16px; margin-bottom: 4px; }
+  .step-desc { color: #666; font-size: 14px; line-height: 1.5; }
+  .stores {
+    background: #1a1a2e;
+    color: #fff;
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 40px;
+    text-align: center;
+  }
+  .stores-title {
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+  }
+  .stores-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    font-weight: 600;
+    font-size: 16px;
+  }
+  .stores-list span.dot { color: rgba(255,255,255,0.3); }
+  .traffic-lights {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+  .tl-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 12px; padding: 20px; text-align: center; }
+  .tl-dot { width: 24px; height: 24px; border-radius: 50%; margin: 0 auto 12px; }
+  .tl-green .tl-dot { background: #16a34a; }
+  .tl-yellow .tl-dot { background: #d97706; }
+  .tl-red .tl-dot { background: #dc2626; }
+  .tl-name { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
+  .tl-desc { font-size: 12px; color: #666; line-height: 1.4; }
+  .cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.15s;
+  }
+  .cta-primary { background: #2db5a3; color: #fff; }
+  .cta-primary:hover { background: #1a1a2e; }
+  .cta-secondary { background: transparent; color: #1a1a2e; border: 1px solid #e5e5e5; }
+  .cta-secondary:hover { border-color: #2db5a3; color: #2db5a3; }
+  .footer {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid #e5e5e5;
+    font-size: 13px;
+    color: #888;
+  }
+  .telemetry-note { margin-top: 16px; padding-top: 16px; border-top: 1px dashed #eee; }
+  .telemetry-note .telemetry-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #4b5563;
+    cursor: pointer;
+  }
+  .telemetry-note .telemetry-row input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    accent-color: #1a1a2e;
+  }
+  .telemetry-note .telemetry-hint {
+    display: block;
+    margin-top: 4px;
+    padding-left: 22px;
+    font-size: 12px;
+    color: #9ca3af;
+    line-height: 1.5;
+  }
+  .lang-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
+    font-size: 13px;
+    color: #666;
+  }
+  .lang-bar-label { letter-spacing: 0.3px; }
+  .lang-switch {
+    display: inline-flex;
+    gap: 2px;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 999px;
+    padding: 3px;
+  }
+  .lang-btn {
+    background: transparent;
+    color: #888;
+    border: none;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    border-radius: 999px;
+    font-family: inherit;
+    line-height: 1;
+  }
+  .lang-btn:hover { color: #1a1a2e; }
+  .lang-btn.active { background: #1a1a2e; color: #fff; }
+  .health-onboard-btn {
+    background: transparent;
+    color: #888;
+    border: none;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    border-radius: 999px;
+    font-family: inherit;
+    line-height: 1;
+  }
+  .health-onboard-btn:hover { color: #1a1a2e; }
+  .health-onboard-btn.active { background: #db2777; color: #fff; }
+  @media (max-width: 600px) {
+    h1 { font-size: 36px; }
+    .traffic-lights { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="logo">
+    <div class="logo-icon">E</div>
+    <div class="logo-text" data-i18n="popupTitle">Evigrade Skin</div>
+  </div>
+
+  <div class="lang-bar">
+    <span class="lang-bar-label" data-i18n="welcomeLangPrompt">Выберите язык интерфейса</span>
+    <div class="lang-switch" data-i18n-title="langSwitchAria">
+      <button class="lang-btn" data-lang="ru" type="button" data-i18n="langRu">Русский</button>
+      <button class="lang-btn" data-lang="en" type="button" data-i18n="langEn">English</button>
+      <button class="lang-btn" data-lang="es" type="button" data-i18n="langEs">Español</button>
+    </div>
+  </div>
+
+  <div class="lang-bar">
+    <span class="lang-bar-label" data-i18n="welcomeHealthPrompt">¿Tienes algún estado especial?</span>
+    <div class="lang-switch">
+      <button class="health-onboard-btn" data-health="none" type="button" data-i18n="welcomeHealthNone">None</button>
+      <button class="health-onboard-btn" data-health="pregnancy" type="button" data-i18n="welcomeHealthPregnant">Pregnancy</button>
+      <button class="health-onboard-btn" data-health="lactation" type="button" data-i18n="welcomeHealthLactating">Lactation</button>
+    </div>
+  </div>
+
+  <h1 data-i18n="welcomeTitle">Расширение установлено</h1>
+  <p class="lead" data-i18n="welcomeLead">Состав будет подсвечиваться автоматически</p>
+
+  <div class="traffic-lights">
+    <div class="tl-card tl-green">
+      <div class="tl-dot"></div>
+      <div class="tl-name" data-i18n="tlGreen">Работает</div>
+      <div class="tl-desc" data-i18n="welcomeTlGreenDesc">Есть РКИ</div>
+    </div>
+    <div class="tl-card tl-yellow">
+      <div class="tl-dot"></div>
+      <div class="tl-name" data-i18n="tlYellow">Спорно</div>
+      <div class="tl-desc" data-i18n="welcomeTlYellowDesc">Слабая база</div>
+    </div>
+    <div class="tl-card tl-red">
+      <div class="tl-dot"></div>
+      <div class="tl-name" data-i18n="tlRed">Не работает</div>
+      <div class="tl-desc" data-i18n="welcomeTlRedDesc">Не доказан</div>
+    </div>
+  </div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-text">
+        <div class="step-title" data-i18n="welcomeStep1Title"></div>
+        <div class="step-desc" data-i18n="welcomeStep1Desc"></div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-text">
+        <div class="step-title" data-i18n="welcomeStep2Title"></div>
+        <div class="step-desc" data-i18n="welcomeStep2Desc"></div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-text">
+        <div class="step-title" data-i18n="welcomeStep3Title"></div>
+        <div class="step-desc" data-i18n="welcomeStep3Desc"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stores">
+    <div class="stores-title" data-i18n="welcomeStoresTitle"></div>
+    <div class="stores-list">
+      <span>Wildberries</span><span class="dot">·</span>
+      <span>Ozon</span><span class="dot">·</span>
+      <span>Goldapple</span><span class="dot">·</span>
+      <span>iHerb</span><span class="dot">·</span>
+      <span>Sephora</span><span class="dot">·</span>
+      <span>Ulta</span><span class="dot">·</span>
+      <span>Boots</span><span class="dot">·</span>
+      <span>Lookfantastic</span><span class="dot">·</span>
+      <span>Cult Beauty</span><span class="dot">·</span>
+      <span>Beauty Bay</span><span class="dot">·</span>
+      <span>Notino</span><span class="dot">·</span>
+      <span>Douglas</span><span class="dot">·</span>
+      <span>dm</span><span class="dot">·</span>
+      <span>Rossmann</span><span class="dot">·</span>
+      <span>Druni</span>
+    </div>
+  </div>
+
+  <div class="cta-row">
+    <a target="_blank" rel="noopener noreferrer" class="cta cta-primary" data-welcome-cta="primary"
+       data-i18n="welcomeCtaPrimary" data-i18n-href="welcomeCtaPrimaryHref">Open store</a>
+    <a href="https://www.evigrade.com/ingredients" target="_blank" rel="noopener noreferrer"
+       class="cta cta-secondary" data-welcome-cta="secondary" data-i18n="welcomeCtaSecondary">Database</a>
+  </div>
+
+  <div class="footer" data-i18n="welcomeFooter"></div>
+  <div class="footer telemetry-note">
+    <label class="telemetry-row">
+      <input type="checkbox" id="telemetry-toggle" checked>
+      <span data-i18n="telemetryLabel">Anonymous usage stats</span>
+    </label>
+    <span class="telemetry-hint" data-i18n="telemetryHint"></span>
+  </div>
+</div>
+<script src="i18n.js"></script>
+<script src="welcome.js"></script>
+</body>
+</html>

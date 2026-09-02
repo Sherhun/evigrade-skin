@@ -1,0 +1,25 @@
+{
+  "extName": { "message": "Evigrade Skin – проверка состава косметики" },
+  "extDescription": {
+    "message": "Светофор доказательности для каждого ингредиента косметики. Личный стоп-лист аллергенов и сравнение составов. 18 магазинов."
+  },
+  "popupTitle": { "message": "Evigrade Skin" },
+  "popupSubtitle": { "message": "Проверка состава косметики" },
+  "scanning": { "message": "Сканирую страницу..." },
+  "noIngredients": { "message": "Не удалось найти состав на этой странице" },
+  "pasteManually": { "message": "Вставить состав вручную" },
+  "analyze": { "message": "Проверить" },
+  "pastePlaceholder": { "message": "Вставьте список ингредиентов через запятую..." },
+  "green": { "message": "Работает" },
+  "yellow": { "message": "Спорно" },
+  "red": { "message": "Не работает" },
+  "unknown": { "message": "Нет в базе" },
+  "moreOnSite": { "message": "Подробнее на сайте" },
+  "foundCount": {
+    "message": "Найдено $COUNT$ из $TOTAL$",
+    "placeholders": { "count": { "content": "$1" }, "total": { "content": "$2" } }
+  },
+  "irritation": { "message": "Раздражение" },
+  "openCard": { "message": "Карточка" },
+  "error": { "message": "Ошибка соединения с сервером" }
+}

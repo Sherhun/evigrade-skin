@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://lh3.googleusercontent.com; font-src 'self'; connect-src https://evigrade.vercel.app https://www.evigrade.com https://evigrade.com; form-action 'none'; base-uri 'none';">
+  <meta name="referrer" content="no-referrer">
+  <meta name="viewport" content="width=400">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div id="app">
+    <header id="header">
+      <div class="logo">
+        <span class="logo-icon">E</span>
+        <div class="logo-text">
+          <span class="logo-title" data-i18n="popupTitle">Evigrade Skin</span>
+          <span class="logo-sub" data-i18n="popupSubtitle"></span>
+        </div>
+      </div>
+      <div id="account-row" class="account-row">
+        <div class="lang-switch" id="lang-switch" data-i18n-title="langSwitchAria" title="Change language">
+          <button class="lang-btn" data-lang="ru" type="button">RU</button>
+          <button class="lang-btn" data-lang="en" type="button">EN</button>
+          <button class="lang-btn" data-lang="es" type="button">ES</button>
+        </div>
+        <button id="account-btn" class="account-btn" type="button">
+          <span id="account-label" data-i18n="accountSignIn">Sign in</span>
+        </button>
+        <span id="tier-badge" class="tier-badge" style="display:none"></span>
+      </div>
+    </header>
+
+    <!-- Health filters: pregnancy / lactation toggle -->
+    <div id="health-filters" class="health-filters">
+      <button id="health-pregnancy" class="health-btn" type="button">
+        <span class="health-icon" aria-hidden="true">⚠</span>
+        <span data-i18n="healthPregnancy">Pregnancy</span>
+      </button>
+      <button id="health-lactation" class="health-btn" type="button">
+        <span class="health-icon" aria-hidden="true">⚠</span>
+        <span data-i18n="healthLactation">Breastfeeding</span>
+      </button>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" data-tab="main" data-i18n="tabAnalysis">Analysis</button>
+      <button class="tab" data-tab="blacklist" data-i18n="tabBlacklist">Allergens</button>
+      <button class="tab" data-tab="compare" data-i18n="tabCompare">Compare</button>
+    </div>
+
+    <!-- Tab: Main (analysis) -->
+    <div id="tab-main" class="tab-content active">
+      <div id="status" class="status">
+        <span data-i18n="scanning"></span>
+      </div>
+
+      <div id="results" class="results" style="display:none"></div>
+
+      <div id="summary" class="summary" style="display:none"></div>
+
+      <div id="manual-section" class="manual-section" style="display:none">
+        <button id="btn-manual" class="btn-manual" data-i18n="pasteManually"></button>
+        <div id="manual-form" style="display:none">
+          <textarea id="manual-input" rows="4" data-i18n-placeholder="pastePlaceholder"></textarea>
+          <button id="btn-analyze" class="btn-analyze" data-i18n="analyze"></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab: Blacklist -->
+    <div id="tab-blacklist" class="tab-content">
+      <div class="bl-section">
+        <div class="bl-category">
+          <div class="bl-cat-header">
+            <span class="bl-cat-dot" style="background:#dc2626"></span>
+            <span data-i18n="blAllergensTitle">Allergens</span>
+          </div>
+          <div class="bl-cat-desc" data-i18n="blAllergensDesc"></div>
+          <div id="bl-allergens" class="bl-chips"></div>
+          <div class="bl-add-row">
+            <input id="bl-allergen-input" class="bl-input" data-i18n-placeholder="blInputPlaceholder" autocomplete="off">
+            <button id="bl-allergen-add" class="bl-add-btn">+</button>
+          </div>
+          <div id="bl-allergen-suggest" class="bl-suggest"></div>
+        </div>
+
+        <div class="bl-category">
+          <div class="bl-cat-header">
+            <span class="bl-cat-dot" style="background:#d97706"></span>
+            <span data-i18n="blComedogenicTitle">Comedogenic</span>
+          </div>
+          <div class="bl-cat-desc" data-i18n="blComedogenicDesc"></div>
+          <div id="bl-comedogenic" class="bl-chips"></div>
+          <div class="bl-add-row">
+            <input id="bl-comedogenic-input" class="bl-input" data-i18n-placeholder="blInputPlaceholder" autocomplete="off">
+            <button id="bl-comedogenic-add" class="bl-add-btn">+</button>
+          </div>
+          <div id="bl-comedogenic-suggest" class="bl-suggest"></div>
+        </div>
+
+        <div class="bl-category">
+          <div class="bl-cat-header">
+            <span class="bl-cat-dot" style="background:#6b7280"></span>
+            <span data-i18n="blAvoidTitle">Other unwanted</span>
+          </div>
+          <div class="bl-cat-desc" data-i18n="blAvoidDesc"></div>
+          <div id="bl-avoid" class="bl-chips"></div>
+          <div class="bl-add-row">
+            <input id="bl-avoid-input" class="bl-input" data-i18n-placeholder="blInputPlaceholder" autocomplete="off">
+            <button id="bl-avoid-add" class="bl-add-btn">+</button>
+          </div>
+          <div id="bl-avoid-suggest" class="bl-suggest"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Paywall overlay -->
+    <div id="paywall" class="paywall" style="display:none">
+      <div class="paywall-card">
+        <div class="paywall-title" data-i18n="paywallTitle">Pro feature</div>
+        <div id="paywall-text" class="paywall-text"></div>
+        <button id="paywall-upgrade" class="btn-analyze" data-i18n="paywallUpgrade">Upgrade</button>
+        <div class="paywall-intl-note" data-i18n="paywallIntlPayNote"></div>
+        <button id="paywall-close" class="paywall-close" data-i18n="paywallClose">Close</button>
+      </div>
+    </div>
+
+    <!-- Tab: Compare -->
+    <div id="tab-compare" class="tab-content">
+      <div id="compare-empty" class="compare-empty">
+        <div class="compare-empty-icon">&#x2696;</div>
+        <div class="compare-empty-text" data-i18n="compareEmptyText"></div>
+        <div class="compare-empty-hint" data-i18n="compareEmptyHint"></div>
+      </div>
+      <div id="compare-list" class="compare-list" style="display:none"></div>
+      <div id="compare-actions" class="compare-actions" style="display:none">
+        <button id="btn-compare" class="btn-analyze" data-i18n="compareSubmit">Compare</button>
+        <button id="btn-clear-compare" class="btn-clear-compare" data-i18n="compareClear">Clear</button>
+      </div>
+    </div>
+
+    <!-- Telemetry opt-out. Lives in the popup footer so power users can find
+         it without hunting through settings, but stays out of the way for
+         everyone else. Default state is opt-IN (checkbox checked). -->
+    <div class="telemetry-footer">
+      <label class="telemetry-row">
+        <input type="checkbox" id="telemetry-toggle" checked>
+        <span data-i18n="telemetryLabel">Anonymous usage stats</span>
+      </label>
+      <div class="telemetry-hint" data-i18n="telemetryHint"></div>
+    </div>
+  </div>
+
+  <script src="api-contract.js"></script>
+  <script src="i18n.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

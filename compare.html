@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; form-action 'none'; base-uri 'none';">
+<meta name="referrer" content="no-referrer">
+<title data-i18n="compareDocTitle">Evigrade</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="compare.css">
+</head>
+<body>
+<div class="container">
+  <div class="top-bar">
+    <div class="logo">
+      <div class="logo-icon">E</div>
+      <div class="logo-text" data-i18n="popupTitle">Evigrade Skin</div>
+    </div>
+    <span class="top-title" data-i18n="comparePageTitle">Compare</span>
+  </div>
+
+  <div id="empty" class="empty">
+    <div class="empty-icon">&#x2696;</div>
+    <div class="empty-text" data-i18n="compareEmpty2"></div>
+    <div class="empty-hint" data-i18n="compareEmptyHint2"></div>
+  </div>
+
+  <div id="compare-root" style="display:none">
+    <div id="product-headers" class="product-headers"></div>
+    <div id="blacklist-alert" class="blacklist-alert" style="display:none"></div>
+    <div id="summary-grid" class="summary-grid"></div>
+
+    <div id="section-cleanser" class="section" style="display:none">
+      <h2 class="section-title" data-i18n="compareSecCleanser"></h2>
+      <div class="section-desc" data-i18n="compareSecCleanserDesc"></div>
+      <div id="cleanser-grid" class="cleanser-grid"></div>
+    </div>
+
+    <div id="section-common" class="section" style="display:none">
+      <h2 class="section-title" data-i18n="compareSecCommon"></h2>
+      <div class="section-desc" data-i18n="compareSecCommonDesc"></div>
+      <div id="common-table"></div>
+    </div>
+
+    <div id="section-unique" class="section" style="display:none">
+      <h2 class="section-title" data-i18n="compareSecUnique"></h2>
+      <div id="unique-lists"></div>
+    </div>
+
+    <div id="section-full" class="section">
+      <h2 class="section-title" data-i18n="compareSecFull"></h2>
+      <div class="section-desc" data-i18n="compareSecFullDesc"></div>
+      <div id="full-table" class="table-wrapper"></div>
+    </div>
+  </div>
+</div>
+
+<script src="api-contract.js"></script>
+<script src="i18n.js"></script>
+<script src="compare.js"></script>
+</body>
+</html>

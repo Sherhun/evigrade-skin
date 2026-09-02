@@ -1,0 +1,25 @@
+{
+  "extName": { "message": "Evigrade Skin – análisis de ingredientes cosméticos" },
+  "extDescription": {
+    "message": "Semáforo basado en evidencia para cada ingrediente cosmético. Lista personal de alérgenos y comparación. 18 tiendas."
+  },
+  "popupTitle": { "message": "Evigrade Skin" },
+  "popupSubtitle": { "message": "Análisis de ingredientes cosméticos" },
+  "scanning": { "message": "Analizando la página..." },
+  "noIngredients": { "message": "No se encontraron ingredientes en esta página" },
+  "pasteManually": { "message": "Pegar ingredientes manualmente" },
+  "analyze": { "message": "Analizar" },
+  "pastePlaceholder": { "message": "Pega la lista de ingredientes separados por comas..." },
+  "green": { "message": "Funciona" },
+  "yellow": { "message": "Dudoso" },
+  "red": { "message": "No funciona" },
+  "unknown": { "message": "No está en la base" },
+  "moreOnSite": { "message": "Más en la web" },
+  "foundCount": {
+    "message": "Encontrados $COUNT$ de $TOTAL$",
+    "placeholders": { "count": { "content": "$1" }, "total": { "content": "$2" } }
+  },
+  "irritation": { "message": "Irritación" },
+  "openCard": { "message": "Ficha" },
+  "error": { "message": "Error de conexión con el servidor" }
+}
