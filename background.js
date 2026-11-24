@@ -55,6 +55,9 @@ const PROD_EXTENSION_ID = "ffipaidpbkbfhdhmijhncneohohbhfml";
 // unbounded blob in storage; oldest entries are dropped first.
 const QUEUE_MAX = 100;
 
+// Per-request cap for telemetry POSTs, see postTo().
+const POST_TIMEOUT_MS = 15000;
+
 // Whitelist of event types the worker will accept from any sender. Pulled from
 // the API contract so adding a type in one place is enough.
 const ALLOWED_EVENT_TYPES =
@@ -172,6 +175,9 @@ async function postTo(url, payload, checkVersionHeader) {
     credentials: "omit",
     referrer: "",
     mode: "cors",
+    // A hung request would hold the queue lock below for as long as the
+    // worker lives, and every event behind it would die with the worker.
+    signal: AbortSignal.timeout(POST_TIMEOUT_MS),
   });
   if (checkVersionHeader) {
     try {
@@ -212,32 +218,48 @@ async function writeQueue(queue) {
   } catch {}
 }
 
-async function enqueue(payload) {
-  const queue = await readQueue();
-  queue.push(payload);
-  await writeQueue(queue);
+// Every read-modify-write of the queue goes through this one chain. Without
+// it, two wake-ups at once (cold start + hourly alarm) replayed the same event
+// twice, and two failed sends at once overwrote each other in storage, losing
+// one of them. Both happened on a real install on 9 October 2026: one Sephora
+// error arrived as two rows, and the SCAN before it never arrived.
+let queueChain = Promise.resolve();
+
+function withQueueLock(fn) {
+  const run = queueChain.then(fn);
+  queueChain = run.catch(() => {});
+  return run;
+}
+
+function enqueue(payload) {
+  return withQueueLock(async () => {
+    const queue = await readQueue();
+    queue.push(payload);
+    await writeQueue(queue);
+  });
 }
 
 /**
  * Replay queued events oldest first. Stops at the first failure and keeps the
  * remainder — if the network is down there is no point burning the whole
  * queue against it, and order matters for install-then-activity cohorts.
+ * The queue is saved after every delivered event, so a worker killed halfway
+ * does not resend on the next wake what already landed.
  */
-async function flushQueue() {
-  if (await isOptedOut()) {
-    await writeQueue([]);
-    return;
-  }
-  const queue = await readQueue();
-  if (!queue.length) return;
-
-  const remaining = [...queue];
-  while (remaining.length) {
-    const ok = await deliver(remaining[0]);
-    if (!ok) break;
-    remaining.shift();
-  }
-  if (remaining.length !== queue.length) await writeQueue(remaining);
+function flushQueue() {
+  return withQueueLock(async () => {
+    if (await isOptedOut()) {
+      await writeQueue([]);
+      return;
+    }
+    const queue = await readQueue();
+    while (queue.length) {
+      const ok = await deliver(queue[0]);
+      if (!ok) break;
+      queue.shift();
+      await writeQueue(queue);
+    }
+  });
 }
 
 async function sendEvent(type, extra = {}) {

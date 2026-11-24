@@ -15,6 +15,8 @@
   // через manifest content_scripts). Меняем там, читаем здесь.
   const SITE_URL = globalThis.evgContract?.SITE_URL || "https://evigrade.vercel.app";
   const API_URL = `${SITE_URL}/api/ingredients/match`;
+  // Pause before the one retry of a match request that failed on the network.
+  const MATCH_RETRY_DELAY_MS = 3000;
   const BLACKLIST_KEY = "evigrade_blacklist";
   const COMPARE_KEY = "evigrade_compare";
 
@@ -2601,13 +2603,12 @@
     const storeSlug = resolveStoreSlug(host);
     track("SCAN", { store: storeSlug, totalCount: ingredients.length });
 
-    let data;
-    try {
-      const safeIngredients = ingredients
-        .filter((s) => typeof s === "string")
-        .map((s) => s.slice(0, 200))
-        .slice(0, 200);
-      const res = await fetch(API_URL, {
+    const safeIngredients = ingredients
+      .filter((s) => typeof s === "string")
+      .map((s) => s.slice(0, 200))
+      .slice(0, 200);
+    const postMatch = () =>
+      fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ingredients: safeIngredients }),
@@ -2615,6 +2616,23 @@
         referrer: "",
         mode: "cors",
       });
+
+    let data;
+    try {
+      let res;
+      try {
+        res = await postMatch();
+      } catch (err) {
+        // "Failed to fetch" means the connection dropped, usually for seconds:
+        // a VPN switching exits, Wi-Fi waking up. In July 2026 a user's next
+        // attempt on the same Sephora page went through 4 s after the error.
+        // A second failure falls through to the outer catch and is reported.
+        LOG("API fetch failed, retrying once:", err);
+        await new Promise((r) => setTimeout(r, MATCH_RETRY_DELAY_MS));
+        // The page may have moved on to another product while we waited.
+        if (lastAnalyzedKey !== fingerprint) return;
+        res = await postMatch();
+      }
       LOG("API response status:", res.status);
       try {
         const check = globalThis.evgContract?.checkApiVersion(res.headers);
@@ -2635,11 +2653,31 @@
       data = globalThis.evgContract.sanitizeMatchResponse(await res.json());
     } catch (err) {
       LOG("API fetch failed:", err);
+      const offline = navigator.onLine === false;
       track("ERROR", {
         store: storeSlug,
         errorCode: "match_fetch_failed",
-        comment: String(err && err.message ? err.message : err).slice(0, 500),
+        // "(offline)" tells the dashboard reader the user's own connection
+        // was down, not our API.
+        comment:
+          String(err && err.message ? err.message : err).slice(0, 480) +
+          (offline ? " (offline)" : ""),
       });
+      if (offline) {
+        // The browser knows the network is gone, so it will also say when it
+        // is back. Analyze the same block then instead of leaving the page
+        // without a panel until the next reload.
+        window.addEventListener(
+          "online",
+          () => {
+            if (lastAnalyzedKey !== fingerprint) return;
+            if (!parseResult.element?.isConnected) return;
+            lastAnalyzedKey = "";
+            analyze(parseResult);
+          },
+          { once: true },
+        );
+      }
       return;
     }
 
